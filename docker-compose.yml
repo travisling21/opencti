@@ -96,7 +96,7 @@ services:
       - AI__ENABLED=${AI_ENABLED:-false}
       - AI__TYPE=${AI_TYPE:-anthropic}
       - AI__TOKEN=${AI_TOKEN:-}
-      - AI__MODEL=${AI_MODEL:-claude-sonnet-4-5-20241022}
+      - AI__MODEL=${AI_MODEL:-claude-3-5-sonnet-20241022}
       - AI__MAX_TOKENS=${AI_MAX_TOKENS:-4096}
     ports:
       - "${OPENCTI_PORT:-8080}:8080"
