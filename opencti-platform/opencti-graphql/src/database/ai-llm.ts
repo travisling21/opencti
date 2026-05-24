@@ -40,7 +40,7 @@ if (AI_ENABLED && AI_TOKEN) {
         model: AI_MODEL || 'claude-sonnet-4-6-20250514',
         anthropicApiKey: AI_TOKEN,
         temperature: 0,
-        maxTokens: AI_MAX_TOKENS || 4096,
+        maxTokens: Number(AI_MAX_TOKENS) || 4096,
       });
 
       break;
@@ -260,8 +260,12 @@ export const queryNLQAi = async (promptValue: ChatPromptValueInterface) => {
 
   logApp.info('[NLQ] Querying AI model for structured output');
   try {
-    return await nlqChat.withStructuredOutput<Output>(OutputSchema).invoke(promptValue);
+    const structuredModel = nlqChat.withStructuredOutput<Output>(OutputSchema, {
+      method: AI_TYPE === 'anthropic' ? 'tool_calling' : undefined,
+    });
+    return await structuredModel.invoke(promptValue);
   } catch (err) {
+    logApp.error('[NLQ] Structured output error', { cause: err });
     if (err instanceof AuthenticationError) {
       throw badAiConfigError;
     }
