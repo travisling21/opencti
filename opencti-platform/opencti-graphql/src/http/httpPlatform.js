@@ -30,6 +30,7 @@ import { isEngineAlive } from '../database/engine';
 import createSseMiddleware from '../graphql/sseMiddleware';
 import initTaxiiApi from './httpTaxii';
 import initHttpRollingFeeds from './httpRollingFeed';
+import initHttpBlocklistFeeds from './httpBlocklistFeed';
 import { createAuthenticatedContext } from './httpAuthenticatedContext';
 import { extractRefererPathFromReq, setCookieError, decodeOidcState } from './httpUtils';
 import {
@@ -140,6 +141,9 @@ const createApp = async (app, schema) => {
 
   // -- Init rolling feeds rest api
   initHttpRollingFeeds(app);
+
+  // -- Init blocklist feeds rest api
+  initHttpBlocklistFeeds(app);
 
   // -- Init XTM cross-platform auth api (JWKS endpoint, public, no authentication required)
   app.get(`${basePath}/xtm/auth/jwks`, async (_req, res) => {

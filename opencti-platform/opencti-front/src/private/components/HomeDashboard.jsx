@@ -19,6 +19,7 @@ import Security from '../../utils/Security';
 import { lastDayOfThePreviousMonth, monthsAgo, yearsAgo } from '../../utils/Time';
 import LocationMiniMapTargets from './common/location/LocationMiniMapTargets';
 import StixRelationshipsHorizontalBars from './common/stix_relationships/StixRelationshipsHorizontalBars';
+import TrendingIndicators from './common/stix_sighting_relationships/TrendingIndicators';
 import CustomDashboard from './workspaces/dashboards/CustomDashboard';
 import useQueryLoading from '../../utils/hooks/useQueryLoading';
 import useConnectedDocumentModifier from '../../utils/hooks/useConnectedDocumentModifier';
@@ -441,6 +442,9 @@ const DefaultDashboard = ({ timeField }) => {
               date_attribute: timeField === 'functional' ? 'start_time' : 'created_at',
             }]}
           />
+        </Grid>
+        <Grid item xs={4}>
+          <TrendingIndicators height={410} />
         </Grid>
       </Grid>
     </Security>

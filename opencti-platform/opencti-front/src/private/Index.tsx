@@ -23,6 +23,7 @@ import { Stack, SxProps } from '@mui/material';
 import DraftToolbar from './components/drafts/DraftToolbar';
 import { ChatbotProvider } from './components/chatbox/ChatbotContext';
 import useTopBanner from '../utils/hooks/useTopBanner';
+import CommandPalette from '../components/CommandPalette';
 
 const HomeDashboard = lazy(() => import('./components/HomeDashboard'));
 const StixObjectOrStixRelationship = lazy(() => import('./components/StixObjectOrStixRelationship'));
@@ -109,6 +110,7 @@ const Index = ({ settings }: IndexProps) => {
         <CssBaseline />
         <TopBar />
         <LeftBar />
+        <CommandPalette />
         <Message />
         <NewsFeedToastManager />
         <Stack component="main" sx={mainSx}>
