@@ -37,7 +37,7 @@ if (AI_ENABLED && AI_TOKEN) {
       });
 
       nlqChat = new ChatAnthropic({
-        model: AI_MODEL || 'claude-sonnet-4-6-20250514',
+        model: AI_MODEL || 'claude-sonnet-4-5-20241022',
         anthropicApiKey: AI_TOKEN,
         temperature: 0,
         maxTokens: Number(AI_MAX_TOKENS) || 4096,
@@ -125,7 +125,7 @@ export const queryAnthropic = async (busId: string | null, systemMessage: string
   try {
     logApp.info('[AI] Querying Anthropic Claude with prompt', { type: AI_TYPE });
     const stream = (client as Anthropic).messages.stream({
-      model: AI_MODEL || 'claude-sonnet-4-6-20250514',
+      model: AI_MODEL || 'claude-sonnet-4-5-20241022',
       max_tokens: AI_MAX_TOKENS || 4096,
       system: systemMessage,
       messages: [
