@@ -25,6 +25,7 @@ RUN set -ex; \
     && npm install -g node-gyp \
     && yarn install
 COPY opencti-graphql /opt/opencti-build/opencti-graphql
+ENV NODE_OPTIONS=--max_old_space_size=4096
 RUN yarn build:prod
 
 
@@ -44,6 +45,7 @@ RUN set -ex; \
 COPY opencti-front /opt/opencti-build/opencti-front
 COPY opencti-graphql/config/schema/opencti.graphql /opt/opencti-build/opencti-graphql/config/schema/opencti.graphql
 
+ENV NODE_OPTIONS=--max_old_space_size=4096
 RUN yarn build:standalone
 
 
