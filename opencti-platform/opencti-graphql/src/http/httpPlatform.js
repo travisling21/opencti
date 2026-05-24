@@ -43,6 +43,15 @@ import {
   postAgentMessageStream,
   getLegacyChatbotProxy,
 } from './httpChatbotProxy';
+import {
+  getLocalChatbotConfig,
+  getLocalChatbotAgents,
+  postLocalChatbotSession,
+  postLocalChatbotMessage,
+  postLocalChatbotUpload,
+  postLocalAgentMessage,
+  postLocalAgentMessageStream,
+} from './httpLocalChatbot';
 import { PROVIDERS } from '../modules/authenticationProvider/providers-configuration';
 import { CERT_PROVIDER } from '../modules/authenticationProvider/provider-cert';
 import { HEADERS_PROVIDER } from '../modules/authenticationProvider/provider-headers';
@@ -524,18 +533,15 @@ const createApp = async (app, schema) => {
     }
   });
 
-  // -- Chatbot Proxy
-  // Config endpoint is always available (frontend uses it to detect mode)
-  app.get(`${basePath}/chatbot/config`, getChatbotConfig);
-  // XTM One Platform Chat API routes (used when xtm_one_token is set)
-  app.get(`${basePath}/chatbot/agents`, getChatbotAgents);
-  app.post(`${basePath}/chatbot/sessions`, postChatbotSession);
-  app.post(`${basePath}/chatbot/messages`, postChatbotMessage);
-  app.post(`${basePath}/chatbot/upload`, postChatbotUpload);
-  app.post(`${basePath}/chatbot/agent`, postAgentMessage);
-  app.post(`${basePath}/chatbot/agent/stream`, postAgentMessageStream);
-  // Legacy Flowise proxy (used when xtm_one_token is NOT set)
-  app.post(`${basePath}/chatbot`, getLegacyChatbotProxy);
+  // -- Chatbot (local Claude-powered)
+  app.get(`${basePath}/chatbot/config`, getLocalChatbotConfig);
+  app.get(`${basePath}/chatbot/agents`, getLocalChatbotAgents);
+  app.post(`${basePath}/chatbot/sessions`, postLocalChatbotSession);
+  app.post(`${basePath}/chatbot/messages`, postLocalChatbotMessage);
+  app.post(`${basePath}/chatbot/upload`, postLocalChatbotUpload);
+  app.post(`${basePath}/chatbot/agent`, postLocalAgentMessage);
+  app.post(`${basePath}/chatbot/agent/stream`, postLocalAgentMessageStream);
+  app.post(`${basePath}/chatbot`, postLocalChatbotMessage);
 
   // Other routes - Render index.html
   app.get('*any', async (_, res) => {
