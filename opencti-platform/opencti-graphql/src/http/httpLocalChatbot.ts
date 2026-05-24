@@ -108,7 +108,12 @@ export const postLocalChatbotMessage = async (req: Express.Request, res: Express
       return;
     }
 
-    let history = sessions.get(conversationId) || [];
+    const sessionId = conversationId || uuidv4();
+    if (!sessions.has(sessionId)) {
+      sessions.set(sessionId, []);
+    }
+
+    let history = sessions.get(sessionId)!;
     history.push({ role: 'user', content });
 
     res.setHeader('Content-Type', 'text/event-stream');
@@ -118,8 +123,7 @@ export const postLocalChatbotMessage = async (req: Express.Request, res: Express
     res.setHeader('Transfer-Encoding', 'chunked');
     res.status(200);
 
-    const messageId = uuidv4();
-    res.write(`data: ${JSON.stringify({ type: 'session', conversation_id: conversationId || messageId })}\n\n`);
+    res.write(`data: ${JSON.stringify({ type: 'status', status: 'thinking' })}\n\n`);
 
     const stream = client.messages.stream({
       model: AI_MODEL,
@@ -132,16 +136,14 @@ export const postLocalChatbotMessage = async (req: Express.Request, res: Express
     for await (const event of stream) {
       if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
         fullResponse += event.delta.text;
-        res.write(`data: ${JSON.stringify({ type: 'content', content: fullResponse })}\n\n`);
+        res.write(`data: ${JSON.stringify({ type: 'stream', content: event.delta.text })}\n\n`);
       }
     }
 
     history.push({ role: 'assistant', content: fullResponse });
-    if (conversationId) {
-      sessions.set(conversationId, history);
-    }
+    sessions.set(sessionId, history);
 
-    res.write(`data: ${JSON.stringify({ type: 'end' })}\n\n`);
+    res.write(`data: ${JSON.stringify({ type: 'done', content: fullResponse, conversation_id: sessionId })}\n\n`);
     res.end();
   } catch (e: any) {
     logApp.error('Error in local chatbot message', { cause: e });
