@@ -261,7 +261,7 @@ export const queryNLQAi = async (promptValue: ChatPromptValueInterface) => {
   logApp.info('[NLQ] Querying AI model for structured output');
   try {
     const structuredModel = nlqChat.withStructuredOutput<Output>(OutputSchema, {
-      method: AI_TYPE === 'anthropic' ? 'tool_calling' : undefined,
+      method: AI_TYPE === 'anthropic' ? 'functionCalling' : undefined,
     });
     return await structuredModel.invoke(promptValue);
   } catch (err) {
