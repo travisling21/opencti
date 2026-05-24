@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { v4 as uuidv4 } from 'uuid';
 import conf, { logApp } from '../config/conf';
 import { createAuthenticatedContext } from './httpAuthenticatedContext';
-import { elPaginate } from '../database/engine';
+import { elList } from '../database/engine';
 import { READ_DATA_INDICES } from '../database/utils';
 import { extractRepresentative } from '../database/entity-representative';
 import type { AuthContext, AuthUser } from '../types/user';
@@ -38,12 +38,11 @@ const queryPlatformData = async (context: AuthContext, user: AuthUser, searchTer
   const sections: string[] = [];
 
   try {
-    const searchResults = await elPaginate(context, user, READ_DATA_INDICES, {
+    const searchResults = await elList(context, user, READ_DATA_INDICES, {
       search: searchTerm,
       first: 10,
       orderBy: '_score',
       orderMode: 'desc',
-      connectionFormat: false,
       types: [
         'Report', 'Indicator', 'Threat-Actor-Group', 'Threat-Actor-Individual',
         'Malware', 'Campaign', 'Intrusion-Set', 'Vulnerability',
@@ -68,11 +67,10 @@ const queryPlatformData = async (context: AuthContext, user: AuthUser, searchTer
   }
 
   try {
-    const recentReports = await elPaginate(context, user, READ_DATA_INDICES, {
+    const recentReports = await elList(context, user, READ_DATA_INDICES, {
       first: 5,
       orderBy: 'created_at',
       orderMode: 'desc',
-      connectionFormat: false,
       types: ['Report'],
     });
 
@@ -89,11 +87,10 @@ const queryPlatformData = async (context: AuthContext, user: AuthUser, searchTer
   }
 
   try {
-    const recentIndicators = await elPaginate(context, user, READ_DATA_INDICES, {
+    const recentIndicators = await elList(context, user, READ_DATA_INDICES, {
       first: 5,
       orderBy: 'created_at',
       orderMode: 'desc',
-      connectionFormat: false,
       types: ['Indicator'],
     });
 
@@ -111,11 +108,10 @@ const queryPlatformData = async (context: AuthContext, user: AuthUser, searchTer
   }
 
   try {
-    const threats = await elPaginate(context, user, READ_DATA_INDICES, {
+    const threats = await elList(context, user, READ_DATA_INDICES, {
       first: 5,
       orderBy: 'created_at',
       orderMode: 'desc',
-      connectionFormat: false,
       types: ['Threat-Actor-Group', 'Threat-Actor-Individual', 'Intrusion-Set', 'Campaign', 'Malware'],
     });
 
