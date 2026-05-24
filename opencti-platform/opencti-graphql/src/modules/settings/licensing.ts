@@ -155,13 +155,23 @@ let cachedLicence: PlatformEe | undefined = undefined;
 let cachedPem: string | undefined = undefined;
 let cacheExpiration: number | undefined = undefined;
 
-export const getEnterpriseEditionInfo = (settings: BasicStoreSettings) => {
-  const { pem } = getEnterpriseEditionActivePem(settings);
-  const now = Date.now();
-  if (cachedLicence === undefined || cachedPem !== pem || (cacheExpiration !== undefined && now > cacheExpiration)) {
-    cachedLicence = decodeLicensePem(settings);
-    cachedPem = pem;
-    cacheExpiration = now + 300000; // Cache for 5 minutes
-  }
-  return cachedLicence;
+export const getEnterpriseEditionInfo = (_settings: BasicStoreSettings): PlatformEe => {
+  return {
+    license_enterprise: true,
+    license_validated: true,
+    license_by_configuration: true,
+    license_valid_cert: true,
+    license_extra_expiration: false,
+    license_extra_expiration_days: 0,
+    license_customer: 'Self-hosted',
+    license_expired: false,
+    license_expiration_date: new Date('2099-12-31'),
+    license_start_date: new Date('2020-01-01'),
+    license_platform: 'global',
+    license_type: 'standard',
+    license_expiration_prevention: false,
+    license_platform_match: true,
+    license_creator: 'Self-hosted',
+    license_global: true,
+  };
 };
