@@ -1,6 +1,8 @@
 import type { ChatPromptValueInterface } from '@langchain/core/prompt_values';
+import { ChatAnthropic } from '@langchain/anthropic';
 import { ChatMistralAI } from '@langchain/mistralai';
 import { AzureChatOpenAI, ChatOpenAI } from '@langchain/openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { Mistral } from '@mistralai/mistralai';
 import type { ChatCompletionStreamRequest } from '@mistralai/mistralai/models/components';
 import { AuthenticationError, AzureOpenAI, OpenAI } from 'openai';
@@ -25,10 +27,24 @@ const AI_VERSION = conf.get('ai:version');
 const AI_AZURE_INSTANCE = conf.get('ai:ai_azure_instance');
 const AI_AZURE_DEPLOYMENT = conf.get('ai:ai_azure_deployment');
 
-let client: Mistral | OpenAI | AzureOpenAI | null = null;
-let nlqChat: ChatOpenAI | ChatMistralAI | AzureChatOpenAI | null = null;
+let client: Mistral | OpenAI | AzureOpenAI | Anthropic | null = null;
+let nlqChat: ChatOpenAI | ChatMistralAI | AzureChatOpenAI | ChatAnthropic | null = null;
 if (AI_ENABLED && AI_TOKEN) {
   switch (AI_TYPE) {
+    case 'anthropic':
+      client = new Anthropic({
+        apiKey: AI_TOKEN,
+      });
+
+      nlqChat = new ChatAnthropic({
+        model: AI_MODEL || 'claude-sonnet-4-20250514',
+        anthropicApiKey: AI_TOKEN,
+        temperature: 0,
+        maxTokens: AI_MAX_TOKENS || 4096,
+      });
+
+      break;
+
     case 'mistralai':
       client = new Mistral({
         serverURL: isEmptyField(AI_ENDPOINT) ? undefined : AI_ENDPOINT,
@@ -97,9 +113,42 @@ if (AI_ENABLED && AI_TOKEN) {
       break;
 
     default:
-      throw UnsupportedError('Not supported AI type (currently support: mistralai, openai, azureopenai)', { type: AI_TYPE });
+      throw UnsupportedError('Not supported AI type (currently support: anthropic, mistralai, openai, azureopenai)', { type: AI_TYPE });
   }
 }
+
+// Query Anthropic Claude (Streaming)
+export const queryAnthropic = async (busId: string | null, systemMessage: string, userMessage: string, user: AuthUser) => {
+  if (!client) {
+    throw UnsupportedError('Incorrect AI configuration', { enabled: AI_ENABLED, type: AI_TYPE, endpoint: AI_ENDPOINT, model: AI_MODEL });
+  }
+  try {
+    logApp.info('[AI] Querying Anthropic Claude with prompt', { type: AI_TYPE });
+    const stream = (client as Anthropic).messages.stream({
+      model: AI_MODEL || 'claude-sonnet-4-20250514',
+      max_tokens: AI_MAX_TOKENS || 4096,
+      system: systemMessage,
+      messages: [
+        { role: 'user', content: truncate(userMessage, AI_MAX_TOKENS, false) },
+      ],
+    });
+    let content = '';
+    for await (const event of stream) {
+      if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+        content += event.delta.text;
+        if (busId !== null) {
+          await notify(BUS_TOPICS[AI_BUS].EDIT_TOPIC, { bus_id: busId, content }, user);
+        }
+      }
+    }
+    return content || 'No response from Anthropic Claude';
+  } catch (err) {
+    logApp.error('[AI] Cannot query Anthropic Claude', { cause: err });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    return `An error occurred: ${err.toString()}`;
+  }
+};
 
 // Query MistralAI (Streaming)
 export const queryMistralAi = async (busId: string | null, systemMessage: string, userMessage: string, user: AuthUser) => {
@@ -183,6 +232,8 @@ export const queryChatGpt = async (busId: string | null, developerMessage: strin
 export const queryAi = async (busId: string | null, developerMessage: string | null, userMessage: string, user: AuthUser) => {
   const finalDeveloperMessage = developerMessage || 'You are an assistant helping a cyber threat intelligence analyst to better understand cyber threat intelligence data.';
   switch (AI_TYPE) {
+    case 'anthropic':
+      return queryAnthropic(busId, finalDeveloperMessage, userMessage, user);
     case 'mistralai':
       return queryMistralAi(busId, finalDeveloperMessage, userMessage, user);
     case 'azureopenai':

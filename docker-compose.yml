@@ -93,6 +93,11 @@ services:
       - RABBITMQ__PASSWORD=${RABBITMQ_DEFAULT_PASS:-changeme-rabbitmq}
       - SMTP__HOSTNAME=${SMTP_HOSTNAME:-localhost}
       - SMTP__PORT=25
+      - AI__ENABLED=${AI_ENABLED:-false}
+      - AI__TYPE=${AI_TYPE:-anthropic}
+      - AI__TOKEN=${AI_TOKEN:-}
+      - AI__MODEL=${AI_MODEL:-claude-sonnet-4-20250514}
+      - AI__MAX_TOKENS=${AI_MAX_TOKENS:-4096}
     ports:
       - "${OPENCTI_PORT:-8080}:8080"
     depends_on:
