@@ -127,6 +127,7 @@ services:
   # MITRE ATT&CK - Attack patterns, techniques, tactics, threat actors, malware
   connector-mitre:
     image: opencti/connector-mitre:7.260522.0
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
@@ -149,6 +150,7 @@ services:
   # CVE / NVD - Common Vulnerabilities and Exposures
   connector-cve:
     image: opencti/connector-cve:7.260522.0
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
@@ -170,6 +172,7 @@ services:
   # AlienVault OTX - Threat intelligence pulses (IOCs, threat actors, malware)
   connector-alienvault:
     image: opencti/connector-alienvault:7.260522.0
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
@@ -198,6 +201,7 @@ services:
   # Abuse.ch URLhaus - Malicious URLs used for malware distribution
   connector-urlhaus:
     image: opencti/connector-urlhaus:7.260522.0
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
@@ -218,6 +222,7 @@ services:
   # CISA Known Exploited Vulnerabilities
   connector-cisa-known-exploited:
     image: opencti/connector-cisa-known-exploited-vulnerabilities:7.260522.0
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
@@ -239,6 +244,7 @@ services:
   # OpenCTI Datasets - Default threat actor, country, sector data
   connector-opencti:
     image: opencti/connector-opencti:7.260522.0
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
@@ -261,6 +267,7 @@ services:
   # Import File STIX - Enables STIX bundle file import via the UI
   connector-import-file-stix:
     image: opencti/connector-import-file-stix:7.260522.0
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
@@ -277,6 +284,7 @@ services:
   # Export File STIX - Enables STIX bundle export from the UI
   connector-export-file-stix:
     image: opencti/connector-export-file-stix:7.260522.0
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
@@ -292,6 +300,7 @@ services:
   # Export File CSV - Enables CSV export from the UI
   connector-export-file-csv:
     image: opencti/connector-export-file-csv:7.260522.0
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
