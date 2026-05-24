@@ -527,7 +527,7 @@ const SearchInput = (props) => {
           {isAIEnabled && (
             <Tooltip
               title={(isCGUStatusPending && !isAdmin)
-                ? t_i18n('Ask Ariane isn\'t activated yet. Please reach out to your administrator to enable this feature.')
+                ? t_i18n('Ask Claude isn\'t activated yet. Please reach out to your administrator to enable this feature.')
                 : nlqNoAgentAvailable
                   ? t_i18n('No agent available for this action. Ask your administrator to configure XTM One.')
                   : isNLQActivated && selectedAgent

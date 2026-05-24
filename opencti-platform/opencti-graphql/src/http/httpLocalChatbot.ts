@@ -161,9 +161,9 @@ export const getLocalChatbotAgents = async (req: Express.Request, res: Express.R
     res.json([
       {
         id: 'claude-cti-assistant',
-        name: 'Claude CTI Assistant',
-        slug: 'claude-cti',
-        description: 'AI-powered cyber threat intelligence assistant with platform data access',
+        name: 'Ask Claude',
+        slug: 'ask-claude',
+        description: 'Claude-powered threat intelligence assistant with full platform data access',
       },
     ]);
   } catch (e: any) {

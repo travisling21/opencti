@@ -119,7 +119,7 @@ class ChatbotManager {
       chatWindow: {
         showTitle: true,
         showAgentMessages: false,
-        title: this.t_i18n('Ask Ariane'),
+        title: this.t_i18n('Ask Claude'),
         titleAvatarSrc: fileUri(embleme),
         titleBackgroundColor: 'linear-gradient(90deg, #3C108C 0%, #5E1AD5 100%)',
         welcomeMessage: this.t_i18n('Hi there 👋 You\'re speaking with an AI Agent. I\'m here to answer your questions, so what brings you here today?'),
