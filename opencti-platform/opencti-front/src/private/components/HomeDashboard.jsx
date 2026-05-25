@@ -20,6 +20,7 @@ import { lastDayOfThePreviousMonth, monthsAgo, yearsAgo } from '../../utils/Time
 import LocationMiniMapTargets from './common/location/LocationMiniMapTargets';
 import StixRelationshipsHorizontalBars from './common/stix_relationships/StixRelationshipsHorizontalBars';
 import TrendingIndicators from './common/stix_sighting_relationships/TrendingIndicators';
+import DailyDigest from './common/ai/DailyDigest';
 import CustomDashboard from './workspaces/dashboards/CustomDashboard';
 import useQueryLoading from '../../utils/hooks/useQueryLoading';
 import useConnectedDocumentModifier from '../../utils/hooks/useConnectedDocumentModifier';
@@ -158,6 +159,9 @@ const DefaultDashboard = ({ timeField }) => {
       )}
     >
       <Grid container={true} spacing={3}>
+        <Grid item xs={12}>
+          <DailyDigest height={500} />
+        </Grid>
         <Grid item xs={3}>
           <StixCoreObjectsNumber
             entityType="Intrusion-Set"

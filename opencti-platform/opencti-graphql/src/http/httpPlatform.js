@@ -31,6 +31,7 @@ import createSseMiddleware from '../graphql/sseMiddleware';
 import initTaxiiApi from './httpTaxii';
 import initHttpRollingFeeds from './httpRollingFeed';
 import initHttpBlocklistFeeds from './httpBlocklistFeed';
+import initHttpAiDigest from './httpAiDigest';
 import { createAuthenticatedContext } from './httpAuthenticatedContext';
 import { extractRefererPathFromReq, setCookieError, decodeOidcState } from './httpUtils';
 import {
@@ -153,6 +154,9 @@ const createApp = async (app, schema) => {
 
   // -- Init blocklist feeds rest api
   initHttpBlocklistFeeds(app);
+
+  // -- Init AI daily digest rest api
+  initHttpAiDigest(app);
 
   // -- Init XTM cross-platform auth api (JWKS endpoint, public, no authentication required)
   app.get(`${basePath}/xtm/auth/jwks`, async (_req, res) => {
