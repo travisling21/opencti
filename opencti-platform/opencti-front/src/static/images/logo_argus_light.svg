@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" fill="none">
+  <!-- Eye shape - outer -->
+  <path d="M30 14C18 14 8 30 8 30s10 16 22 16 22-16 22-16S42 14 30 14z" stroke="#0a6ebd" stroke-width="2.5" fill="none"/>
+  <!-- Iris -->
+  <circle cx="30" cy="30" r="9" fill="#0a6ebd" opacity="0.12" stroke="#0a6ebd" stroke-width="2"/>
+  <!-- Pupil -->
+  <circle cx="30" cy="30" r="4" fill="#0a6ebd"/>
+  <!-- Light reflection -->
+  <circle cx="32.5" cy="27.5" r="1.5" fill="#ffffff" opacity="0.9"/>
+  <!-- Text: ARGUS -->
+  <text x="62" y="36" font-family="'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="700" fill="#1a1a2e" letter-spacing="3">ARGUS</text>
+</svg>
