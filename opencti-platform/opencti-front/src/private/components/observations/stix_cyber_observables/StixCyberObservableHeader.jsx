@@ -12,6 +12,7 @@ import { DraftChip } from '../../common/draft/DraftChip';
 import StixCoreObjectContainer from '../../common/stix_core_objects/StixCoreObjectContainer';
 import StixCoreObjectEnrichment from '../../common/stix_core_objects/StixCoreObjectEnrichment';
 import StixCoreObjectEnrollPlaybook from '../../common/stix_core_objects/StixCoreObjectEnrollPlaybook';
+import ExternalLookup from '../../common/stix_core_objects/ExternalLookup';
 import StixCoreObjectMenuItemUnderEE from '../../common/stix_core_objects/StixCoreObjectMenuItemUnderEE';
 import StixCoreObjectSharing from '../../common/stix_core_objects/StixCoreObjectSharing';
 import useGranted, {
@@ -57,6 +58,7 @@ const StixCyberObservableHeaderComponent = ({ stixCyberObservable, DeleteCompone
       title={stixCyberObservable.observable_value}
       rightActions={(
         <>
+          <ExternalLookup observableValue={stixCyberObservable.observable_value} />
           {isKnowledgeUpdater && (
             <StixCoreObjectContainer elementId={stixCyberObservable.id} />
           )}

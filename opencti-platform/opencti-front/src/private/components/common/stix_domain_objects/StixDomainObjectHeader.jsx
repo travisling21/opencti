@@ -29,6 +29,7 @@ import { resolveLink } from '../../../../utils/Entity';
 import Security from '../../../../utils/Security';
 import { authorizedMembersToOptions, CAN_USE_ENTITY_TYPES, useGetCurrentUserAccessRight } from '../../../../utils/authorizedMembers';
 import { getMainRepresentative } from '../../../../utils/defaultRepresentatives';
+import ExternalLookup from '../stix_core_objects/ExternalLookup';
 import useDraftContext from '../../../../utils/hooks/useDraftContext';
 import { useIsEnforceReference } from '../../../../utils/hooks/useEntitySettings';
 import useGranted, {
@@ -505,6 +506,7 @@ const StixDomainObjectHeader = (props) => {
         }
         rightActions={(
           <>
+            <ExternalLookup observableValue={title} entityType={entityType} />
             {disableSharing !== true && (
               <StixCoreObjectSharing
                 elementId={stixDomainObject.id}
