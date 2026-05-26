@@ -32,7 +32,12 @@ const LoginLogo = ({ data }: LoginLogoProps) => {
     <img
       src={logo}
       alt="Argus"
-      width={180}
+      style={{
+        width: 220,
+        display: 'block',
+        margin: '0 auto',
+        objectFit: 'contain',
+      }}
     />
   );
 };
