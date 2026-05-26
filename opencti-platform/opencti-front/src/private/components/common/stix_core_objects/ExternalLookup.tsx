@@ -26,11 +26,29 @@ import type { Theme } from '../../../../components/Theme';
 
 type LookupType = 'ip' | 'domain' | 'hash' | 'cve';
 
-const detectLookupType = (value: string): LookupType | null => {
-  if (/^CVE-\d{4}-\d+$/i.test(value)) return 'cve';
-  if (/^(\d{1,3}\.){3}\d{1,3}$/.test(value)) return 'ip';
-  if (/^[0-9a-f]{32}$/i.test(value) || /^[0-9a-f]{40}$/i.test(value) || /^[0-9a-f]{64}$/i.test(value)) return 'hash';
-  if (/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/i.test(value)) return 'domain';
+const extractLookupValue = (value: string): { type: LookupType; extracted: string } | null => {
+  const trimmed = value.trim();
+
+  if (/^CVE-\d{4}-\d+$/i.test(trimmed)) return { type: 'cve', extracted: trimmed };
+  if (/^[0-9a-f]{32}$/i.test(trimmed) || /^[0-9a-f]{40}$/i.test(trimmed) || /^[0-9a-f]{64}$/i.test(trimmed)) return { type: 'hash', extracted: trimmed };
+  if (/^(\d{1,3}\.){3}\d{1,3}$/.test(trimmed)) return { type: 'ip', extracted: trimmed };
+  if (/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/i.test(trimmed)) return { type: 'domain', extracted: trimmed };
+
+  try {
+    const url = new URL(trimmed.startsWith('http') ? trimmed : `http://${trimmed}`);
+    const host = url.hostname;
+    if (/^(\d{1,3}\.){3}\d{1,3}$/.test(host)) return { type: 'ip', extracted: host };
+    if (host.includes('.')) return { type: 'domain', extracted: host };
+  } catch {
+    // not a URL
+  }
+
+  const ipMatch = trimmed.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/);
+  if (ipMatch) return { type: 'ip', extracted: ipMatch[1] };
+
+  const cveMatch = trimmed.match(/(CVE-\d{4}-\d+)/i);
+  if (cveMatch) return { type: 'cve', extracted: cveMatch[1] };
+
   return null;
 };
 
@@ -59,7 +77,9 @@ const ExternalLookup: React.FC<ExternalLookupProps> = ({ observableValue, entity
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const lookupType = detectLookupType(observableValue);
+  const lookupMatch = extractLookupValue(observableValue);
+  const lookupType = lookupMatch?.type ?? null;
+  const lookupValue = lookupMatch?.extracted ?? observableValue;
 
   const handleLookup = useCallback(async () => {
     if (!lookupType) return;
@@ -67,7 +87,7 @@ const ExternalLookup: React.FC<ExternalLookupProps> = ({ observableValue, entity
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${APP_BASE_PATH}/lookup/${lookupType}/${encodeURIComponent(observableValue)}`, {
+      const res = await fetch(`${APP_BASE_PATH}/lookup/${lookupType}/${encodeURIComponent(lookupValue)}`, {
         credentials: 'same-origin',
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -78,7 +98,7 @@ const ExternalLookup: React.FC<ExternalLookupProps> = ({ observableValue, entity
     } finally {
       setLoading(false);
     }
-  }, [lookupType, observableValue]);
+  }, [lookupType, lookupValue]);
 
   if (!lookupType) return null;
 
@@ -128,7 +148,7 @@ const ExternalLookup: React.FC<ExternalLookupProps> = ({ observableValue, entity
 
   return (
     <>
-      <Tooltip title={`${info.label}: ${observableValue}`}>
+      <Tooltip title={`${info.label}: ${lookupValue}`}>
         <IconButton onClick={handleLookup} size="small" sx={{ color: info.color }}>
           <TravelExploreOutlined sx={{ fontSize: 18 }} />
         </IconButton>
@@ -155,7 +175,7 @@ const ExternalLookup: React.FC<ExternalLookupProps> = ({ observableValue, entity
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
             <Chip
-              label={observableValue}
+              label={lookupValue}
               size="small"
               sx={{ fontFamily: 'monospace', fontSize: '0.8rem', maxWidth: 350 }}
             />
