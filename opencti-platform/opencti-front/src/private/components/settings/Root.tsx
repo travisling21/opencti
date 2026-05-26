@@ -76,14 +76,6 @@ const Root = () => {
             )}
           />
           <Route
-            path="/experience"
-            element={(
-              <Security needs={[SETTINGS_SUPPORT, SETTINGS_SETMANAGEXTMHUB]} placeholder={<Navigate to={fallbackUrl} />}>
-                <Experience />
-              </Security>
-            )}
-          />
-          <Route
             path="/customization/*"
             element={(
               <Security needs={[SETTINGS_SETCUSTOMIZATION]} placeholder={<Navigate to={fallbackUrl} />}>

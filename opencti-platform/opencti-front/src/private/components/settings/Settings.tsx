@@ -404,9 +404,6 @@ const SettingsComponent = ({ queryRef }: SettingsComponentProps) => {
             <Card
               titleSx={{ alignItems: 'end' }}
               title={t_i18n('License')}
-              action={!isEnterpriseEditionByConfig && (
-                <EnterpriseEditionButton inLine={true} />
-              )}
             >
               <List style={{ marginTop: -20 }}>
                 {!settings.platform_enterprise_edition.license_expired && settings.platform_enterprise_edition.license_expiration_prevention && (
@@ -572,9 +569,6 @@ const SettingsComponent = ({ queryRef }: SettingsComponentProps) => {
         <Grid size={6}>
           <Card
             title={t_i18n('Argus platform')}
-            action={!isEnterpriseEditionActivated && (
-              <EnterpriseEditionButton inLine={true} />
-            )}
           >
             <Formik
               onSubmit={() => {}}
