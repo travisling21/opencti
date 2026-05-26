@@ -107,10 +107,12 @@ const LoginLayout = ({ settings, children }: LoginLayoutProps) => {
         alignItems="center"
         sx={{ background: backgroundContent }}
       >
-        <LoginLogo data={settings} />
-        <Box sx={{ mt: 4, width: '100%', maxWidth: 420 }}>
-          {children}
-        </Box>
+        <Stack alignItems="center" sx={{ width: '100%', maxWidth: 420 }}>
+          <LoginLogo data={settings} />
+          <Box sx={{ mt: 4, width: '100%' }}>
+            {children}
+          </Box>
+        </Stack>
       </Stack>
     </>
   );
