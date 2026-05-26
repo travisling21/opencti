@@ -25,7 +25,7 @@ const lookupIp = async (ip: string, abuseipdbKey?: string) => {
         headers: { Key: abuseipdbKey, Accept: 'application/json' },
       });
       if (res.ok) {
-        const json = await res.json();
+        const json: any = await res.json();
         const d = json.data;
         results.sources.push({
           source: 'AbuseIPDB',
@@ -48,7 +48,7 @@ const lookupIp = async (ip: string, abuseipdbKey?: string) => {
   try {
     const res = await fetch(`https://ipapi.co/${encodeURIComponent(ip)}/json/`);
     if (res.ok) {
-      const geo = await res.json();
+      const geo: any = await res.json();
       if (!geo.error) {
         results.sources.push({
           source: 'IP Geolocation',
@@ -75,7 +75,7 @@ const lookupDomain = async (domain: string) => {
   try {
     const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=A`);
     if (res.ok) {
-      const dns = await res.json();
+      const dns: any = await res.json();
       results.sources.push({
         source: 'Google DNS',
         status: dns.Status === 0 ? 'NOERROR' : `ERROR (${dns.Status})`,
@@ -93,7 +93,7 @@ const lookupDomain = async (domain: string) => {
   try {
     const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=MX`);
     if (res.ok) {
-      const dns = await res.json();
+      const dns: any = await res.json();
       if (dns.Answer && dns.Answer.length > 0) {
         results.sources.push({
           source: 'MX Records',
@@ -122,7 +122,7 @@ const lookupHash = async (hash: string) => {
       body: `query=get_info&hash=${encodeURIComponent(hash)}`,
     });
     if (res.ok) {
-      const json = await res.json();
+      const json: any = await res.json();
       if (json.query_status === 'ok' && json.data && json.data.length > 0) {
         const d = json.data[0];
         results.sources.push({
@@ -151,7 +151,7 @@ const lookupCve = async (cve: string) => {
   try {
     const res = await fetch(`https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${encodeURIComponent(cve)}`);
     if (res.ok) {
-      const json = await res.json();
+      const json: any = await res.json();
       const vuln = json.vulnerabilities?.[0]?.cve;
       if (vuln) {
         const desc = vuln.descriptions?.find((d: any) => d.lang === 'en')?.value || '';
@@ -187,7 +187,7 @@ const initHttpLookup = (app: Express.Application) => {
     try {
       const context = await createAuthenticatedContext(req, res, 'lookup');
       if (!context.user) { res.sendStatus(403); return; }
-      const { value } = req.params;
+      const value = req.params.value as string;
       const cacheKey = `${CACHE_PREFIX}ip:${value}`;
       const abuseipdbKey = req.query.abuseipdb_key as string || undefined;
       const result = await cachedLookup(cacheKey, () => lookupIp(value, abuseipdbKey));
@@ -202,7 +202,7 @@ const initHttpLookup = (app: Express.Application) => {
     try {
       const context = await createAuthenticatedContext(req, res, 'lookup');
       if (!context.user) { res.sendStatus(403); return; }
-      const { value } = req.params;
+      const value = req.params.value as string;
       const cacheKey = `${CACHE_PREFIX}domain:${value}`;
       const result = await cachedLookup(cacheKey, () => lookupDomain(value));
       res.json({ ...result.data, cached: result.cached, looked_up_at: new Date().toISOString() });
@@ -216,7 +216,7 @@ const initHttpLookup = (app: Express.Application) => {
     try {
       const context = await createAuthenticatedContext(req, res, 'lookup');
       if (!context.user) { res.sendStatus(403); return; }
-      const { value } = req.params;
+      const value = req.params.value as string;
       const cacheKey = `${CACHE_PREFIX}hash:${value}`;
       const result = await cachedLookup(cacheKey, () => lookupHash(value));
       res.json({ ...result.data, cached: result.cached, looked_up_at: new Date().toISOString() });
@@ -230,7 +230,7 @@ const initHttpLookup = (app: Express.Application) => {
     try {
       const context = await createAuthenticatedContext(req, res, 'lookup');
       if (!context.user) { res.sendStatus(403); return; }
-      const { value } = req.params;
+      const value = req.params.value as string;
       const cacheKey = `${CACHE_PREFIX}cve:${value}`;
       const result = await cachedLookup(cacheKey, () => lookupCve(value));
       res.json({ ...result.data, cached: result.cached, looked_up_at: new Date().toISOString() });
