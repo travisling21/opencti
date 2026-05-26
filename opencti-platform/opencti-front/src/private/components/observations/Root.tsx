@@ -15,6 +15,7 @@ const Indicators = lazy(() => import('./Indicators'));
 const RootIndicator = lazy(() => import('./indicators/Root'));
 const Infrastructures = lazy(() => import('./Infrastructures'));
 const RootInfrastructure = lazy(() => import('./infrastructures/Root'));
+const LookupPage = lazy(() => import('./LookupPage'));
 
 const Root = () => {
   let redirect: string | null = null;
@@ -66,6 +67,10 @@ const Root = () => {
         <Route
           path="/infrastructures/:infrastructureId/*"
           element={boundaryWrapper(RootInfrastructure)}
+        />
+        <Route
+          path="/lookup"
+          element={boundaryWrapper(LookupPage)}
         />
       </Routes>
     </Suspense>

@@ -31,6 +31,7 @@ import {
   SurroundSoundOutlined,
   TaskAltOutlined,
   TrackChanges,
+  TravelExploreOutlined,
   VisibilityOutlined,
   WebAssetOutlined,
   WifiTetheringOutlined,
@@ -601,6 +602,7 @@ const LeftBarComponent = ({ queryRef }) => {
                   { type: 'Artifact', link: '/dashboard/observations/artifacts', label: t_i18n('Artifacts'), icon: <ArchiveOutline fontSize="small" /> },
                   { type: 'Indicator', link: '/dashboard/observations/indicators', label: t_i18n('Indicators'), icon: <ShieldSearch fontSize="small" /> },
                   { type: 'Infrastructure', link: '/dashboard/observations/infrastructures', label: t_i18n('Infrastructures'), icon: <ServerNetwork fontSize="small" /> },
+                  { link: '/dashboard/observations/lookup', label: t_i18n('External Lookup'), icon: <TravelExploreOutlined fontSize="small" /> },
                 ]}
               />
             )}
