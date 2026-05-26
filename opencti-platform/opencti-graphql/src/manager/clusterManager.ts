@@ -39,7 +39,7 @@ const initClusterManager = () => {
       activityManager.status(settings),
       playbookManager.status(settings),
       fileIndexManager.status(settings),
-      ...getAllManagersStatuses(settings),
+      ...getAllManagersStatuses(settings).filter((m: any) => !m.id?.includes('HUB_REGISTRATION') && !m.id?.includes('XTM_ONE_REGISTRATION')),
     ];
     const configData: ClusterConfig = { platform_id: platformId, managers };
     await registerClusterInstance(platformId, configData);

@@ -38,7 +38,6 @@ export const getApplicationDependencies = async (context) => {
     { name: 'Search engine', version: searchEngineVersion().then((v) => `${v.platform} - ${v.version}`) },
     { name: 'RabbitMQ', version: getRabbitMQVersion(context) },
     { name: 'Redis', version: getRedisVersion() },
-    { name: 'XTM-One', version: getXtmOneRegistrationVersion() }, // Do not change this, client relies on the name to activate feature
   ];
 };
 
