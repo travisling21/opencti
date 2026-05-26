@@ -95,39 +95,22 @@ const LoginLayout = ({ settings, children }: LoginLayoutProps) => {
   const hasCustomBackground = hasCustomColor(theme, 'theme_background');
   const backgroundContent = hasCustomBackground
     ? theme.palette.background.default
-    : theme.palette.designSystem.background.main;
-
-  const contentSx: SxProps = {
-    minWidth: 500,
-    overflow: 'hidden',
-    background: backgroundContent,
-    boxShadow: '8px 0px 9px 0px #0000002F',
-    zIndex: 2,
-  };
-
-  const asideSx: SxProps = {
-    background: getAsideBackground(),
-    backgroundSize: loginAsideType === 'image' ? 'cover' : undefined,
-    backgroundPosition: loginAsideType === 'image' ? 'center' : undefined,
-    position: 'relative',
-    overflow: 'hidden',
-  };
+    : theme.palette.mode === 'dark' ? '#070d19' : '#f5f5f5';
 
   return (
     <>
       <SystemBanners settings={settings} />
-      <Stack data-testid="login-page" direction="row" height="100%">
-        <Stack
-          flex={1}
-          sx={contentSx}
-          justifyContent="center"
-          alignItems="center"
-          gap={4}
-        >
-          <LoginLogo data={settings} />
+      <Stack
+        data-testid="login-page"
+        height="100%"
+        justifyContent="center"
+        alignItems="center"
+        sx={{ background: backgroundContent }}
+      >
+        <LoginLogo data={settings} />
+        <Box sx={{ mt: 4, width: '100%', maxWidth: 420 }}>
           {children}
-        </Stack>
-        <Box flex={1} sx={asideSx} />
+        </Box>
       </Stack>
     </>
   );
