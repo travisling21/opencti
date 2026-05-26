@@ -593,7 +593,6 @@ const SettingsComponent = ({ queryRef }: SettingsComponentProps) => {
                         />
                       </ListItem>
                     )}
-                    </ListItem>
                   </List>
                 </Form>
               )}
