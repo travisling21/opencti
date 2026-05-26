@@ -323,46 +323,9 @@ const SettingsComponent = ({ queryRef }: SettingsComponentProps) => {
   return (
     <div style={{ height: '100%', scrollbarWidth: 'none' }} data-testid="setting-page">
       <Breadcrumbs elements={[{ label: t_i18n('Settings') }, { label: t_i18n('Parameters'), current: true }]} />
-      {isEnterpriseEditionActivated && (
+      {false && (
         <Grid container={true} spacing={3} style={{ marginBottom: 23 }}>
           <Grid size={6}>
-            <Card
-              titleSx={{ alignItems: 'end' }}
-              title={t_i18n('Enterprise Edition')}
-              action={!isEnterpriseEditionByConfig && (
-                <DangerZoneButton
-                  sensitiveType="ce_ee_toggle"
-                  onClick={() => setOpenEEChanges(true)}
-                >
-                  {t_i18n('Disable Enterprise Edition')}
-                </DangerZoneButton>
-              )}
-            >
-              <List style={{ marginTop: -20 }}>
-                <ListItem divider={true}>
-                  <ListItemText primary={t_i18n('Organization')} />
-                  <ItemBoolean
-                    neutralLabel={settings.platform_enterprise_edition.license_customer}
-                    status={null}
-                  />
-                </ListItem>
-                <ListItem divider={true}>
-                  <ListItemText primary={t_i18n('Creator')} />
-                  <ItemBoolean
-                    neutralLabel={settings.platform_enterprise_edition.license_creator}
-                    status={null}
-                    labelTextTransform="none"
-                  />
-                </ListItem>
-                <ListItem divider={true}>
-                  <ListItemText primary={t_i18n('Scope')} />
-                  <ItemBoolean
-                    neutralLabel={settings.platform_enterprise_edition.license_global ? t_i18n('Global') : t_i18n('Current instance')}
-                    status={null}
-                  />
-                </ListItem>
-              </List>
-            </Card>
             <Dialog
               open={openEEChanges}
               onClose={() => setOpenEEChanges(false)}
@@ -591,17 +554,6 @@ const SettingsComponent = ({ queryRef }: SettingsComponentProps) => {
                       />
                     </ListItem>
                     <ListItem divider={true}>
-                      <ListItemText primary={t_i18n('Edition')} />
-                      <ItemBoolean
-                        neutralLabel={
-                          isEnterpriseEditionValid
-                            ? t_i18n('Enterprise')
-                            : t_i18n('Community')
-                        }
-                        status={null}
-                      />
-                    </ListItem>
-                    <ListItem divider={true}>
                       <ListItemText
                         primary={t_i18n('Architecture mode')}
                       />
@@ -641,29 +593,6 @@ const SettingsComponent = ({ queryRef }: SettingsComponentProps) => {
                         />
                       </ListItem>
                     )}
-                    <ListItem divider={true}>
-                      <ListItemText
-                        primary={(
-                          <>
-                            {t_i18n('Remove Filigran logos')}
-                            <EEChip />
-                          </>
-                        )}
-                      />
-                      <Field
-                        component={Switch}
-                        variant="standard"
-                        name="platform_whitemark"
-                        disabled={!isEnterpriseEditionValid}
-                        checked={
-                          settings.platform_whitemark
-                          && isEnterpriseEditionValid
-                        }
-                        onChange={(_event: ChangeEvent<HTMLInputElement>, value: boolean) => handleSubmitField(
-                          'platform_whitemark',
-                          value,
-                        )}
-                      />
                     </ListItem>
                   </List>
                 </Form>
