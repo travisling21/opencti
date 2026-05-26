@@ -27,7 +27,7 @@ const defaultQuery = `query ExampleQuery {
 }`;
 
 const placeholder = `
-# Welcome to the OpenCTI GraphQL Playground
+# Welcome to the Argus GraphQL Playground
 #
 # Write queries and mutations here, you will get auto-complete hints as you type. 
 # You can provide your query variables in the panel below, 

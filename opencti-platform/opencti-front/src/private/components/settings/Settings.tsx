@@ -571,7 +571,7 @@ const SettingsComponent = ({ queryRef }: SettingsComponentProps) => {
 
         <Grid size={6}>
           <Card
-            title={t_i18n('OpenCTI platform')}
+            title={t_i18n('Argus platform')}
             action={!isEnterpriseEditionActivated && (
               <EnterpriseEditionButton inLine={true} />
             )}

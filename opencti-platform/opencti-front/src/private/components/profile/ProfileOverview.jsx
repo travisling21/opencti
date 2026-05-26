@@ -570,7 +570,7 @@ const ProfileOverviewComponent = (props) => {
       </Card>
       <Card title={t('API access')}>
         <div>
-          <Label>{t('OpenCTI version')}</Label>
+          <Label>{t('Argus version')}</Label>
           <pre>{about.version}</pre>
           <Stack gap={2}>
             <Stack direction="row" justifyContent="flex-end" gap={1}>

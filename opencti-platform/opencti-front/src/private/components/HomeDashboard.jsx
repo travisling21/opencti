@@ -155,7 +155,7 @@ const DefaultDashboard = ({ timeField }) => {
     <Security
       needs={[KNOWLEDGE]}
       placeholder={t_i18n(
-        'You do not have any access to the knowledge of this OpenCTI instance.',
+        'You do not have any access to the knowledge of this Argus instance.',
       )}
     >
       <Grid container={true} spacing={3}>
@@ -494,7 +494,7 @@ const CustomHomeDashboard = ({ dashboard, timeField }) => {
     <Security
       needs={[EXPLORE]}
       placeholder={t_i18n(
-        'You do not have any access to the explore part of this OpenCTI instance.',
+        'You do not have any access to the explore part of this Argus instance.',
       )}
     >
       <Suspense fallback={<Loader />}>

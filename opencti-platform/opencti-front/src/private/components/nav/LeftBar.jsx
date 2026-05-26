@@ -818,33 +818,21 @@ const LeftBarComponent = ({ queryRef }) => {
               marginBottom={1}
               minHeight={16}
             >
-              {
-                navOpen && (
-                  <Typography
-                    component="span"
-                    sx={{
-                      fontFamily: 'IBM Plex Sans',
-                      fontSize: '10px',
-                      lineHeight: '16px',
-                      opacity: 0.8,
-                      color: theme.palette.text.tertiary,
-                    }}
-                  >
-                    {t_i18n('Made by')}
-                  </Typography>
-                )
-              }
-              <img
-                alt="logo"
-                src={logoFiligran}
-                width={navOpen ? 48 : 12}
-                height="12"
-                style={{
-                  opacity: 0.8,
-                  objectFit: 'cover',
-                  objectPosition: 'left center',
+              <Typography
+                component="span"
+                sx={{
+                  fontFamily: 'IBM Plex Sans',
+                  fontSize: navOpen ? '11px' : '8px',
+                  lineHeight: '16px',
+                  opacity: 0.6,
+                  color: theme.palette.text.tertiary,
+                  fontWeight: 600,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
                 }}
-              />
+              >
+                {navOpen ? 'Argus' : 'A'}
+              </Typography>
             </Stack>
           )}
         </MenuList>

@@ -9,7 +9,7 @@ const ErrorNotFound = (props) => {
   return (
     <Alert severity="info">
       <AlertTitle>{t('Error')}</AlertTitle>
-      {t('This page is not found on this OpenCTI application.')}
+      {t('This page is not found on this Argus application.')}
     </Alert>
   );
 };

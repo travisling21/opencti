@@ -554,14 +554,14 @@ const createApp = async (app, schema) => {
       const settings = await getEntityFromCache(context, SYSTEM_USER, ENTITY_TYPE_SETTINGS);
       const data = await readFile(`${__dirname}/../public/index.html`, 'utf8');
       const settingsTitle = settings?.platform_title;
-      const description = 'OpenCTI is an open source platform allowing organizations'
-        + ' to manage their cyber threat intelligence knowledge and observables.';
+      const description = 'Argus is a cyber threat intelligence platform'
+        + ' for managing threat knowledge, indicators, and observables.';
       const settingFavicon = settings?.platform_favicon;
       const withOptionValued = data
         .replace(/%BASE_PATH%/g, basePath)
         .replace(/%APP_SCRIPT_SNIPPET%/g, nconf.get('app:script_snippet')?.trim() ?? '')
         .replace(/%APP_TITLE%/g, isNotEmptyField(settingsTitle) ? validator.escape(settingsTitle)
-          : 'OpenCTI - Cyber Threat Intelligence Platform')
+          : 'Argus - Cyber Threat Intelligence Platform')
         .replace(/%APP_DESCRIPTION%/g, validator.escape(description))
         .replace(/%APP_FAVICON%/g, isNotEmptyField(settingFavicon) ? validator.escape(settingFavicon)
           : `${basePath}/static/ext/favicon.png`)

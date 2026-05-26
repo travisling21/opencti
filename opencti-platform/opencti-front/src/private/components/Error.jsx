@@ -15,7 +15,7 @@ import withRouter from '../../utils/compat_router/withRouter';
 
 // Highest level of error catching, do not rely on any tierce (intl, theme, ...) pure fallback
 export const HighLevelError = () => (
-  <Alert severity="error">An unknown error occurred. Please contact your administrator or OpenCTI maintainers</Alert>
+  <Alert severity="error">An unknown error occurred. Please contact your administrator or Argus maintainers</Alert>
 );
 
 // Really simple error display
@@ -29,7 +29,7 @@ export const SimpleError = () => {
           {t_i18n(
             '',
             {
-              id: 'An unknown error occurred. Please provide a support package to your administrator or OpenCTI maintainers',
+              id: 'An unknown error occurred. Please provide a support package to your administrator or Argus maintainers',
               values: { link_support_package: <Link to="/dashboard/settings/experience">{t_i18n('support package')}</Link> },
             },
           )}

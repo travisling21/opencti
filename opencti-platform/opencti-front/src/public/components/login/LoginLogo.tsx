@@ -31,7 +31,7 @@ const LoginLogo = ({ data }: LoginLogoProps) => {
   return (
     <img
       src={logo}
-      alt="OpenCTI Logo"
+      alt="Argus"
       width={180}
     />
   );
