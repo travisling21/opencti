@@ -8,5 +8,5 @@
   <!-- Light reflection -->
   <circle cx="32.5" cy="27.5" r="1.5" fill="#ffffff" opacity="0.9"/>
   <!-- Text: ARGUS -->
-  <text x="62" y="36" font-family="'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="700" fill="#1a1a2e" letter-spacing="3">ARGUS</text>
+  <text x="62" y="30" font-family="'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="700" fill="#1a1a2e" letter-spacing="3" dominant-baseline="central">ARGUS</text>
 </svg>
