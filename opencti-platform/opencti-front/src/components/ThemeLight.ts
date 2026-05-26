@@ -1,7 +1,7 @@
 import { buttonClasses } from '@mui/material/Button';
 import type { ExtendedThemeOptions } from './Theme';
 import { fileUri } from '../relay/environment';
-import LogoText from '../static/images/logo_argus_light.svg';
+import LogoText from '../static/images/argus_logo.png';
 import LogoCollapsed from '../static/images/logo_argus_collapsed_light.svg';
 import { hexToRGB } from '../utils/Colors';
 import { alpha, darken, lighten } from '@mui/material';
