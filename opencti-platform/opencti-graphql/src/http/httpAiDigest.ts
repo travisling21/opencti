@@ -1,5 +1,6 @@
 import type Express from 'express';
 import Anthropic from '@anthropic-ai/sdk';
+import { createHash } from 'node:crypto';
 import conf, { logApp } from '../config/conf';
 import { createAuthenticatedContext } from './httpAuthenticatedContext';
 import { elList } from '../database/engine';
@@ -7,7 +8,18 @@ import { READ_DATA_INDICES } from '../database/utils';
 import { extractRepresentative } from '../database/entity-representative';
 import { basePath } from '../config/conf';
 import { getClientBase } from '../database/redis';
+import { isBypassUser, isUserHasCapability, KNOWLEDGE } from '../utils/access';
 import type { AuthContext, AuthUser } from '../types/user';
+
+// The digest is cached so it is generated at most once per day per access scope.
+// Caching by access scope (not globally) prevents a high-privilege user's briefing
+// — which may reference markings/entities a low-privilege user cannot see — from
+// being served to users who lack that access.
+const accessScopeKey = (user: AuthUser): string => {
+  if (isBypassUser(user)) return 'bypass';
+  const markings = (user.allowed_marking ?? []).map((m) => m.internal_id).sort().join(',');
+  return createHash('sha256').update(markings).digest('hex').slice(0, 16);
+};
 
 const AI_TOKEN = conf.get('ai:token');
 const AI_MODEL = conf.get('ai:model') || 'claude-3-5-sonnet-20241022';
@@ -148,7 +160,7 @@ const gatherPlatformIntelligence = async (context: AuthContext, user: AuthUser):
 
 export const generateDigest = async (context: AuthContext, user: AuthUser): Promise<{ date: string; content: string; generated_at: string }> => {
   const today = new Date().toISOString().split('T')[0];
-  const cacheKey = `${DIGEST_CACHE_KEY}:${today}`;
+  const cacheKey = `${DIGEST_CACHE_KEY}:${accessScopeKey(user)}:${today}`;
 
   const cachedRaw = await getClientBase().get(cacheKey);
   if (cachedRaw) {
@@ -205,11 +217,15 @@ const initHttpAiDigest = (app: Express.Application) => {
         res.sendStatus(403);
         return;
       }
+      if (!isUserHasCapability(context.user, KNOWLEDGE)) {
+        res.status(403).json({ error: 'Knowledge access capability required' });
+        return;
+      }
 
       const forceRefresh = req.query.refresh === 'true';
       if (forceRefresh) {
         const today = new Date().toISOString().split('T')[0];
-        const cacheKey = `${DIGEST_CACHE_KEY}:${today}`;
+        const cacheKey = `${DIGEST_CACHE_KEY}:${accessScopeKey(context.user)}:${today}`;
         await getClientBase().del(cacheKey);
       }
 
@@ -228,11 +244,16 @@ const initHttpAiDigest = (app: Express.Application) => {
         res.sendStatus(403);
         return;
       }
+      if (!isUserHasCapability(context.user, KNOWLEDGE)) {
+        res.status(403).json({ error: 'Knowledge access capability required' });
+        return;
+      }
 
+      const scope = accessScopeKey(context.user);
       const digests: any[] = [];
       for (let i = 0; i < 7; i++) {
         const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-        const cacheKey = `${DIGEST_CACHE_KEY}:${date}`;
+        const cacheKey = `${DIGEST_CACHE_KEY}:${scope}:${date}`;
         const raw = await getClientBase().get(cacheKey);
         if (raw) {
           digests.push(JSON.parse(raw));

@@ -15,6 +15,7 @@ import conf, {
   logApp,
 } from '../config/conf';
 import { AuthenticationFailure, ConfigurationError, DatabaseError, DraftLockedError, ForbiddenAccess, FunctionalError, UnsupportedError } from '../config/errors';
+import { INSECURE_DEFAULT_ADMIN_TOKEN, INSECURE_DEFAULT_ADMIN_PASSWORD, REMEDIATION_HINT } from '../config/insecureDefaults';
 import { getEntitiesListFromCache, getEntitiesMapFromCache, getEntityFromCache } from '../database/cache';
 import { elLoadBy, elRawDeleteByQuery } from '../database/engine';
 import { createEntity, createRelation, deleteElementById, deleteRelationsByFromAndTo, patchAttribute, updateAttribute, updatedInputsToData } from '../database/middleware';
@@ -2050,6 +2051,8 @@ export const initializeAdminUser = async (context) => {
   if (isEmptyField(adminEmail) || isEmptyField(adminPassword) || isEmptyField(adminToken)
     || adminPassword === DEFAULT_INVALID_CONF_VALUE || adminToken === DEFAULT_INVALID_CONF_VALUE) {
     throw ConfigurationError('You need to configure the environment vars');
+  } else if (adminToken === INSECURE_DEFAULT_ADMIN_TOKEN || adminPassword === INSECURE_DEFAULT_ADMIN_PASSWORD) {
+    throw ConfigurationError(`The admin token or password is set to a publicly-known example value and is therefore insecure. ${REMEDIATION_HINT}`);
   } else {
     // Check fields
     if (!validator.isEmail(adminEmail)) {

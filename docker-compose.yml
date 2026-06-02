@@ -74,11 +74,13 @@ services:
       - APP__PORT=8080
       - APP__BASE_URL=${OPENCTI_BASE_URL:-http://localhost:8080}
       - APP__ADMIN__EMAIL=${OPENCTI_ADMIN_EMAIL:-admin@opencti.io}
-      - APP__ADMIN__PASSWORD=${OPENCTI_ADMIN_PASSWORD:-ChangeMePlease}
-      - APP__ADMIN__TOKEN=${OPENCTI_ADMIN_TOKEN:-b1976749-8a53-4c49-a8c2-47d7d52e3f9a}
-      - APP__ENCRYPTION_KEY=${OPENCTI_ENCRYPTION_KEY:-dGhpcklzQVRlc3RLZXlGb3JEZXZPbmx5MTIzNDU2Nzg=}
+      # Sensitive secrets MUST be provided via .env (no insecure fallback).
+      # The platform refuses to start if these are missing or set to the example values.
+      - APP__ADMIN__PASSWORD=${OPENCTI_ADMIN_PASSWORD:?Set OPENCTI_ADMIN_PASSWORD in .env}
+      - APP__ADMIN__TOKEN=${OPENCTI_ADMIN_TOKEN:?Set OPENCTI_ADMIN_TOKEN in .env (uuidgen)}
+      - APP__ENCRYPTION_KEY=${OPENCTI_ENCRYPTION_KEY:?Set OPENCTI_ENCRYPTION_KEY in .env (openssl rand -base64 32)}
       - APP__APP_LOGS__LOGS_LEVEL=info
-      - APP__HEALTH_ACCESS_KEY=${OPENCTI_HEALTHCHECK_ACCESS_KEY:-healthcheck-key}
+      - APP__HEALTH_ACCESS_KEY=${OPENCTI_HEALTHCHECK_ACCESS_KEY:?Set OPENCTI_HEALTHCHECK_ACCESS_KEY in .env}
       - REDIS__HOSTNAME=redis
       - REDIS__PORT=6379
       - ELASTICSEARCH__URL=http://elasticsearch:9200
@@ -117,7 +119,7 @@ services:
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:-b1976749-8a53-4c49-a8c2-47d7d52e3f9a}
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:?Set OPENCTI_ADMIN_TOKEN in .env}
       - WORKER_LOG_LEVEL=info
     depends_on:
       - opencti
@@ -131,7 +133,7 @@ services:
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:-b1976749-8a53-4c49-a8c2-47d7d52e3f9a}
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:?Set OPENCTI_ADMIN_TOKEN in .env}
       - CONNECTOR_ID=5a6b4c3d-mitre-att-ck
       - CONNECTOR_NAME=MITRE ATT&CK
       - CONNECTOR_SCOPE=marking-definition,identity,attack-pattern,course-of-action,intrusion-set,campaign,malware,tool,report,vulnerability,external-reference-as-report
@@ -154,7 +156,7 @@ services:
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:-b1976749-8a53-4c49-a8c2-47d7d52e3f9a}
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:?Set OPENCTI_ADMIN_TOKEN in .env}
       - CONNECTOR_ID=6b7c8d9e-cve-nvd
       - CONNECTOR_NAME=Common Vulnerabilities and Exposures
       - CONNECTOR_SCOPE=identity,vulnerability
@@ -176,7 +178,7 @@ services:
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:-b1976749-8a53-4c49-a8c2-47d7d52e3f9a}
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:?Set OPENCTI_ADMIN_TOKEN in .env}
       - CONNECTOR_ID=7c8d9e0f-alienvault-otx
       - CONNECTOR_NAME=AlienVault OTX
       - CONNECTOR_SCOPE=alienvault
@@ -205,7 +207,7 @@ services:
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:-b1976749-8a53-4c49-a8c2-47d7d52e3f9a}
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:?Set OPENCTI_ADMIN_TOKEN in .env}
       - CONNECTOR_ID=8d9e0f1a-urlhaus
       - CONNECTOR_NAME=Abuse.ch URLhaus
       - CONNECTOR_SCOPE=urlhaus
@@ -226,7 +228,7 @@ services:
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:-b1976749-8a53-4c49-a8c2-47d7d52e3f9a}
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:?Set OPENCTI_ADMIN_TOKEN in .env}
       - CONNECTOR_ID=9e0f1a2b-cisa-kev
       - CONNECTOR_NAME=CISA Known Exploited Vulnerabilities
       - CONNECTOR_SCOPE=cisa
@@ -248,7 +250,7 @@ services:
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:-b1976749-8a53-4c49-a8c2-47d7d52e3f9a}
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:?Set OPENCTI_ADMIN_TOKEN in .env}
       - CONNECTOR_ID=0f1a2b3c-opencti-datasets
       - CONNECTOR_NAME=OpenCTI Datasets
       - CONNECTOR_SCOPE=marking-definition,identity,location
@@ -271,7 +273,7 @@ services:
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:-b1976749-8a53-4c49-a8c2-47d7d52e3f9a}
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:?Set OPENCTI_ADMIN_TOKEN in .env}
       - CONNECTOR_ID=1a2b3c4d-import-file-stix
       - CONNECTOR_NAME=ImportFileStix
       - CONNECTOR_SCOPE=application/json,text/xml
@@ -288,7 +290,7 @@ services:
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:-b1976749-8a53-4c49-a8c2-47d7d52e3f9a}
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:?Set OPENCTI_ADMIN_TOKEN in .env}
       - CONNECTOR_ID=2b3c4d5e-export-file-stix
       - CONNECTOR_NAME=ExportFileStix
       - CONNECTOR_SCOPE=application/json
@@ -304,7 +306,7 @@ services:
     restart: unless-stopped
     environment:
       - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:-b1976749-8a53-4c49-a8c2-47d7d52e3f9a}
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN:?Set OPENCTI_ADMIN_TOKEN in .env}
       - CONNECTOR_ID=3c4d5e6f-export-file-csv
       - CONNECTOR_NAME=ExportFileCsv
       - CONNECTOR_SCOPE=text/csv

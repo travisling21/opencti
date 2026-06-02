@@ -6,6 +6,7 @@ import { createAuthenticatedContext } from './httpAuthenticatedContext';
 import { elList } from '../database/engine';
 import { READ_DATA_INDICES } from '../database/utils';
 import { extractRepresentative } from '../database/entity-representative';
+import { isUserHasCapability, KNOWLEDGE } from '../utils/access';
 import type { AuthContext, AuthUser } from '../types/user';
 
 const AI_TOKEN = conf.get('ai:token');
@@ -193,6 +194,10 @@ export const postLocalChatbotMessage = async (req: Express.Request, res: Express
     const context = await createAuthenticatedContext(req, res, 'chatbot');
     if (!context.user) {
       res.sendStatus(403);
+      return;
+    }
+    if (!isUserHasCapability(context.user, KNOWLEDGE)) {
+      res.status(403).json({ error: 'Knowledge access capability required' });
       return;
     }
 

@@ -1,10 +1,14 @@
 import type Express from 'express';
-import { basePath, logApp } from '../config/conf';
+import conf, { basePath, logApp } from '../config/conf';
 import { createAuthenticatedContext } from './httpAuthenticatedContext';
 import { getClientBase } from '../database/redis';
+import { isUserHasCapability, KNOWLEDGE } from '../utils/access';
 
 const CACHE_TTL = 86400; // 24 hours
 const CACHE_PREFIX = 'opencti:lookup:';
+// API key is read from server config only, never accepted from the request
+// (query params leak into access logs, proxies, and browser history).
+const ABUSEIPDB_KEY = conf.get('lookup:abuseipdb_key') || undefined;
 
 const cachedLookup = async (cacheKey: string, fetchFn: () => Promise<any>): Promise<{ data: any; cached: boolean }> => {
   const cached = await getClientBase().get(cacheKey);
@@ -187,10 +191,10 @@ const initHttpLookup = (app: Express.Application) => {
     try {
       const context = await createAuthenticatedContext(req, res, 'lookup');
       if (!context.user) { res.sendStatus(403); return; }
+      if (!isUserHasCapability(context.user, KNOWLEDGE)) { res.status(403).json({ error: 'Knowledge access capability required' }); return; }
       const value = req.params.value as string;
       const cacheKey = `${CACHE_PREFIX}ip:${value}`;
-      const abuseipdbKey = req.query.abuseipdb_key as string || undefined;
-      const result = await cachedLookup(cacheKey, () => lookupIp(value, abuseipdbKey));
+      const result = await cachedLookup(cacheKey, () => lookupIp(value, ABUSEIPDB_KEY));
       res.json({ ...result.data, cached: result.cached, looked_up_at: new Date().toISOString() });
     } catch (e: any) {
       logApp.error('[LOOKUP] IP lookup error', { cause: e });
@@ -202,6 +206,7 @@ const initHttpLookup = (app: Express.Application) => {
     try {
       const context = await createAuthenticatedContext(req, res, 'lookup');
       if (!context.user) { res.sendStatus(403); return; }
+      if (!isUserHasCapability(context.user, KNOWLEDGE)) { res.status(403).json({ error: 'Knowledge access capability required' }); return; }
       const value = req.params.value as string;
       const cacheKey = `${CACHE_PREFIX}domain:${value}`;
       const result = await cachedLookup(cacheKey, () => lookupDomain(value));
@@ -216,6 +221,7 @@ const initHttpLookup = (app: Express.Application) => {
     try {
       const context = await createAuthenticatedContext(req, res, 'lookup');
       if (!context.user) { res.sendStatus(403); return; }
+      if (!isUserHasCapability(context.user, KNOWLEDGE)) { res.status(403).json({ error: 'Knowledge access capability required' }); return; }
       const value = req.params.value as string;
       const cacheKey = `${CACHE_PREFIX}hash:${value}`;
       const result = await cachedLookup(cacheKey, () => lookupHash(value));
@@ -230,6 +236,7 @@ const initHttpLookup = (app: Express.Application) => {
     try {
       const context = await createAuthenticatedContext(req, res, 'lookup');
       if (!context.user) { res.sendStatus(403); return; }
+      if (!isUserHasCapability(context.user, KNOWLEDGE)) { res.status(403).json({ error: 'Knowledge access capability required' }); return; }
       const value = req.params.value as string;
       const cacheKey = `${CACHE_PREFIX}cve:${value}`;
       const result = await cachedLookup(cacheKey, () => lookupCve(value));

@@ -7,6 +7,7 @@ import { importJWK, type JWK, jwtVerify, SignJWT } from 'jose';
 import { enrichWithRemoteCredentials } from '../config/credentials';
 import { confNameToEnvName } from '../config/conf';
 import { ConfigurationError, UnsupportedError } from '../config/errors';
+import { INSECURE_DEFAULT_ENCRYPTION_KEY, REMEDIATION_HINT } from '../config/insecureDefaults';
 import { memoize } from './memoize';
 
 const hkdfAsync = promisify(crypto.hkdf);
@@ -252,6 +253,12 @@ delete process.env[confNameToEnvName(encryptionKeyConfName)];
 
 const createPlatformCrypto = async () => {
   const { value } = await enrichWithRemoteCredentials('app:encryption_key', {});
+  const providedKeyBase64 = value ?? encryptionKeyEnvBuffer.toString('base64');
+  if (providedKeyBase64 === INSECURE_DEFAULT_ENCRYPTION_KEY) {
+    throw ConfigurationError(
+      `${encryptionKeyConfName} is set to the publicly-known example value and is therefore insecure. ${REMEDIATION_HINT}`,
+    );
+  }
   const encryptionKey = value ? Buffer.from(value, 'base64') : encryptionKeyEnvBuffer;
 
   if (encryptionKey.length < 32) {
