@@ -32,6 +32,7 @@ import initTaxiiApi from './httpTaxii';
 import initHttpRollingFeeds from './httpRollingFeed';
 import initHttpBlocklistFeeds from './httpBlocklistFeed';
 import initHttpAiDigest from './httpAiDigest';
+import initHttpAiTools from './httpAiTools';
 import initHttpLookup from './httpLookup';
 import { createAuthenticatedContext } from './httpAuthenticatedContext';
 import { extractRefererPathFromReq, setCookieError, decodeOidcState } from './httpUtils';
@@ -158,6 +159,9 @@ const createApp = async (app, schema) => {
 
   // -- Init AI daily digest rest api
   initHttpAiDigest(app);
+
+  // -- Init AI tools (text transforms + entity insights)
+  initHttpAiTools(app);
 
   // -- Init external lookup tools
   initHttpLookup(app);
