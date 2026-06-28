@@ -34,6 +34,7 @@ import initHttpBlocklistFeeds from './httpBlocklistFeed';
 import initHttpAiDigest from './httpAiDigest';
 import initHttpAiTools from './httpAiTools';
 import initHttpLookup from './httpLookup';
+import initHttpFileSearch from './httpFileSearch';
 import { createAuthenticatedContext } from './httpAuthenticatedContext';
 import { extractRefererPathFromReq, setCookieError, decodeOidcState } from './httpUtils';
 import {
@@ -165,6 +166,9 @@ const createApp = async (app, schema) => {
 
   // -- Init external lookup tools
   initHttpLookup(app);
+
+  // -- Init document content search
+  initHttpFileSearch(app);
 
   // -- Init XTM cross-platform auth api (JWKS endpoint, public, no authentication required)
   app.get(`${basePath}/xtm/auth/jwks`, async (_req, res) => {
