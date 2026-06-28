@@ -57,6 +57,10 @@ const initHttpFileSearch = (app: Express.Application) => {
             },
           },
           highlight: {
+            // Custom markers (not HTML) so the frontend can render highlights
+            // safely without dangerouslySetInnerHTML over untrusted file content.
+            pre_tags: ['{{HL}}'],
+            post_tags: ['{{/HL}}'],
             fields: { 'attachment.content': { fragment_size: 220, number_of_fragments: 2 } },
           },
         },

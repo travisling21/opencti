@@ -25,6 +25,7 @@ const Forms = lazy(() => import('./Forms'));
 const FormView = lazy(() => import('./forms/view/FormView'));
 const Entities = lazy(() => import('./Entities'));
 const Relationships = lazy(() => import('./Relationships'));
+const DocumentSearch = lazy(() => import('./DocumentSearch'));
 const Tasks = lazy(() => import('./Tasks'));
 const Taxii = lazy(() => import('./Taxii'));
 const RootConnector = lazy(() => import('./connectors/Root'));
@@ -80,6 +81,10 @@ const Root = () => {
         <Route
           path="/relationships"
           element={boundaryWrapper(Relationships)}
+        />
+        <Route
+          path="/documents"
+          element={boundaryWrapper(DocumentSearch)}
         />
         <Route
           path="/ingestion"
