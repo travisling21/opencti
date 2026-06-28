@@ -81,6 +81,9 @@ services:
       - APP__ENCRYPTION_KEY=${OPENCTI_ENCRYPTION_KEY:?Set OPENCTI_ENCRYPTION_KEY in .env (openssl rand -base64 32)}
       - APP__APP_LOGS__LOGS_LEVEL=info
       - APP__HEALTH_ACCESS_KEY=${OPENCTI_HEALTHCHECK_ACCESS_KEY:?Set OPENCTI_HEALTHCHECK_ACCESS_KEY in .env}
+      # Optional: paste a valid Filigran-issued Enterprise Edition license (PEM)
+      # to legitimately enable EE features. Leave empty to run as Community Edition.
+      - APP__ENTERPRISE_EDITION_LICENSE=${OPENCTI_ENTERPRISE_LICENSE:-}
       - REDIS__HOSTNAME=redis
       - REDIS__PORT=6379
       - ELASTICSEARCH__URL=http://elasticsearch:9200

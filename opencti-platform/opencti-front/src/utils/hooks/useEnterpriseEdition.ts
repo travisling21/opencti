@@ -16,7 +16,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 import useAuth from './useAuth';
 
 const useEnterpriseEdition = (): boolean => {
-  return true;
+  const { settings } = useAuth();
+  return settings.platform_enterprise_edition?.license_validated;
 };
 
 export default useEnterpriseEdition;
