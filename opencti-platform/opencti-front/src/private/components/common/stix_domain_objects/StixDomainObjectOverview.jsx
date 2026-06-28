@@ -10,6 +10,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
+import EntityAIInsight from '../ai/EntityAIInsight';
 import { Formik } from 'formik';
 import { InformationOutline } from 'mdi-material-ui';
 import * as PropTypes from 'prop-types';
@@ -135,6 +136,7 @@ const StixDomainObjectOverview = ({
 
   return (
     <>
+      <EntityAIInsight entityId={stixDomainObject.id} />
       <Card title={t_i18n('Basic information')}>
         <Grid container={false} spacing={3}>
           {isRequestAccessRFI && (

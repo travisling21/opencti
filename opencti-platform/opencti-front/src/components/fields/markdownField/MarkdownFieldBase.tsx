@@ -8,6 +8,7 @@ import Button from '../../common/button/Button';
 import useAI from '../../../utils/hooks/useAI';
 import useHelper from '../../../utils/hooks/useHelper';
 import TextFieldAskAI from '../../../private/components/common/form/TextFieldAskAI';
+import CEAskAI from '../../../private/components/common/ai/CEAskAI';
 import { useFormatter } from '../../i18n';
 import MarkdownDisplay from '../../markdownDisplay/MarkdownDisplay';
 import type { MarkdownImagesController } from './core/markdownImagesController';
@@ -304,6 +305,20 @@ const MarkdownFieldBase = ({
           }}
           format="markdown"
           variant="markdown"
+          disabled={disabled}
+        />
+      )}
+      {askAi && !(enabled && configured) && (
+        <CEAskAI
+          currentValue={draftValue}
+          setFieldValue={(nextValue: string) => {
+            syncLatestMarkdown(nextValue);
+            pushDraftValue(nextValue, false);
+            onFlushValue?.(false);
+            if (typeof onSubmit === 'function') {
+              onSubmit(name, nextValue);
+            }
+          }}
           disabled={disabled}
         />
       )}
